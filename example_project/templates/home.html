@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block body %}
+
+<h1>{% trans 'Latest Project' %}</h1>
+<ul class="audiotracks-list">
+{% for project in projects %}
+    {% include "list_project.html" %}
+{% endfor %}
+</ul>
+{% endblock %}
+

@@ -1,0 +1,13 @@
+{% load i18n %}
+<div class="track-details">
+      <a href="{% url 'project_details' project.id %}">
+        <p class="track-title js-audiotracks-title">
+        {{ project.projectName|title }}
+        </p>
+      </a>
+      <p class="upload-details">
+        {% trans 'uploaded by' %}
+        {{ project.user.username }}
+       {% blocktrans with project.date|timesince as track_age %}{{ track_age }} ago{% endblocktrans %}
+      </p>
+</div>

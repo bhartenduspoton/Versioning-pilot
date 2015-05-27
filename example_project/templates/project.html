@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block body %}
+{% if user.is_authenticated %}
+<form class="audiotracks-form" id="audiotracks-upload-form" 
+      method="POST"  action="{% url 'project' %}">
+  {% csrf_token %}
+  <fieldset>
+    <legend>{% trans 'Create new Project' %}</legend>
+    {{ form.as_p }}
+  </fieldset>
+  <p>
+  <button class="btn primary">{% trans 'Create' %}</button>
+  </p>
+</form>
+{% endif %}
+{% endblock %}

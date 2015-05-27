@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block body %}
+
+<h1>{% trans 'Latest Excel sheet uploads' %}</h1>
+<ul class="audiotracks-list">
+{% for userdata in userdatas %}
+    {% include "list_excels.html" %}
+{% endfor %}
+</ul>
+{% endblock %}
+

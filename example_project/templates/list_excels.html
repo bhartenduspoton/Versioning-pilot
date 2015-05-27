@@ -1,0 +1,34 @@
+{% load i18n %}
+<div class="audiotracks-detail js-audiotracks-container">
+
+<div class="audiotracks-detail js-audiotracks-container">
+ <p> <a href="{{ userdata.excelsheet.url }}">{{ userdata.file_name }}
+    </a>
+  </p>
+
+<div class="track-details">
+      <p class="upload-details">
+        {% trans 'uploaded by' %}
+        {{ userdata.project.user.username }}
+       {% blocktrans with userdata.created_on|timesince as track_age %}{{ track_age }} ago{% endblocktrans %}
+      </p>
+</div>
+
+  <div class="audiotracks-description">
+    <h6>Comment</h6>
+    {{ userdata.comments }}
+     <h6>Version</h6>
+    {{ userdata.version }}
+    <h6>processed</h6>
+    {{ userdata.processed }}
+  </div>
+
+  <div class="audiotracks-download">
+    <a class="btn btn-large btn-success" href="{{ userdata.excelsheet.url }}">
+      {% blocktrans with size=userdata.excelsheet.size|filesizeformat   %}
+      Download  file ({{size}})
+      {% endblocktrans %}
+    </a>
+  </div>
+</div>
+

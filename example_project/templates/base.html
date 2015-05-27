@@ -1,0 +1,60 @@
+{% load i18n %} 
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>POC - {% block title %}Homepage{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-2.0.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/style.css"> 
+    {% block extra_head %}{% endblock %}
+  </head>
+
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">POC demo</a>
+          <ul class="nav">
+            <li class="active"><a href="{% url 'project_data' %}">Home</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'project' %}">Project</a></li>
+                 <li><a href="{% url 'upload' %}">Upload</a></li>
+                {% if user.is_staff %}<li><a href="/admin">Admin</a></li>{% endif %}
+                <li><a href="{% url 'logout' %}?next=/">logout</a></li>
+            {% endif %}
+          </ul>
+          {% if not user.is_authenticated %}
+          <form action="{% url 'login' %}" class="navbar-form pull-right" method="post">
+            {% csrf_token %}
+            <input class="input-small" type="text" name="username" placeholder="Username">
+            <input class="input-small" type="password" name="password" placeholder="Password">
+            <button class="btn" type="submit">Sign in</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        {% block body %}{% endblock %}
+        {% block extra_body %}{% endblock %}
+      </div>
+
+      <footer>
+        <p>&copy; Spoton Team</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
