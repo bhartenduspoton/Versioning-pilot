@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render,render_to_response
 from django.template import RequestContext
 from django.contrib.auth import authenticate, login
@@ -5,10 +6,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 #from Loggin.forms import UserForm, UserProfileForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from main.models import UserData,Project
+from main.models import UserData,Project,TotalG
 from django.contrib.auth.models import User
 from django.core.files.uploadhandler import TemporaryFileUploadHandler
-from main.forms import UserDataForm,ProjectForm
+from main.forms import UserDataForm,ProjectForm,UploadFileForm
 from django.db.models import Max
 from django.conf import settings
 
@@ -58,7 +59,6 @@ def upload(request):
                 flag=1
             user_data.project = project_obj
             user_data.save()
-           
             
             if flag>0:
                 dd=UserData.objects.filter(project=project_obj).aggregate(Max('version'))
@@ -105,26 +105,151 @@ def project_details(request,project_id):
     username=p.user.username
     userdata_list=UserData.objects.filter(project=p)
     return render_to_response("excel.html", {
-        'username': username, 'userdatas': userdata_list
+        'username': username, 'userdatas': userdata_list,'project':p
     }, context_instance=RequestContext(request))
 
 
 
 @csrf_exempt  # request.POST is accessed by CsrfViewMiddleware
-def apiUpload(request):
+def apiUpload(request,user_data_id):
     #print project_id
     print 'apiUpload called'
+    print request
     print request.POST
-    print request.File
-
+    print request.FILES
+    print 'ddfj'
+    user_data = UserData.objects.get(pk=user_data_id)
+    print user_data.file_path
     if request.method == "POST":
-        user_data_id=request.POST['user_data_id']
-        p=Project.objects.get(pk=project_id)
-        username=p.user.username
-        userdata_list=UserData.objects.filter(project=p)
-        return render_to_response("excel.html", {
-            'username': username, 'userdatas': userdata_list
-        }, context_instance=RequestContext(request))
+        form = UploadFileForm(request.POST, request.FILES, instance=user_data)
+        if form.is_valid():
+            form = form.save()
+            ff=str(form.excelsheet)
+            form.file_path=settings.MEDIA_ROOT+"/"+str(ff)
+            fff= ff.split('/')
+            form.file_name=fff[1]
+            form.processed=1;
+            form.save();
+            resp={}
+            resp["status"]="success"
+            resp["message"]="updatd db succesfully"
+            return HttpResponse(json.dumps(resp), content_type='applications/json; charset=utf-8', status=200)
     
     else:
-        return HttpResponse('Only POST here')
+        resp={}
+        resp["status"]="failed"
+        resp["message"]="please use post method"
+        return HttpResponse(json.dumps(resp), content_type='applications/json; charset=utf-8', status=500)
+
+
+@login_required
+@csrf_exempt  # request.POST is accessed by CsrfViewMiddleware
+def add_edit_effort(request,project_id):
+    print project_id
+    p=Project.objects.get(pk=project_id)
+    if request.method=='POST':
+        print request.POST
+        username=p.user.username
+        P1T1=request.POST['P1T1']
+        P1T2=request.POST['P1T2']
+        P1T3=request.POST['P1T3']
+        P1T4=request.POST['P1T4']
+
+        P2T1=request.POST['P2T1']
+        P2T2=request.POST['P2T2']
+        P2T3=request.POST['P2T3']
+        P2T4=request.POST['P2T4']
+
+        P3T1=request.POST['P3T1']
+        P3T2=request.POST['P3T2']
+        P3T3=request.POST['P3T3']
+        P3T4=request.POST['P3T4']
+     
+
+        phase1=TotalG.objects.filter(project=p,phase=1)
+        phase2=TotalG.objects.filter(project=p,phase=2)
+        phase3=TotalG.objects.filter(project=p,phase=3)
+        if len(phase1)==0:
+            phase1=TotalG(project=p,phase=1,TG1=P1T1,TG2=P1T2,TG3=P1T3,TG4=P1T4)
+            phase1.save()
+        else:
+            phase1=phase1[0]
+            phase1.TG1=P1T1
+            phase1.TG2=P1T2
+            phase1.TG3=P1T3
+            phase1.TG4=P1T4
+            phase1.save()
+
+        if len(phase2)==0:
+            phase2=TotalG(project=p,phase=2,TG1=P2T1,TG2=P2T2,TG3=P2T3,TG4=P2T4)
+            phase2.save()
+        else:
+            phase2=phase2[0]
+            phase2.TG1=P2T1
+            phase2.TG2=P2T2
+            phase2.TG3=P2T3
+            phase2.TG4=P2T4
+            phase2.save()
+
+        if len(phase3)==0:
+            phase3=TotalG(project=p,phase=3,TG1=P3T1,TG2=P3T2,TG3=P3T3,TG4=P3T4)
+            phase3.save()
+        else:
+            phase3=phase3[0]
+            phase3.TG1=P3T1
+            phase3.TG2=P3T2
+            phase3.TG3=P3T3
+            phase3.TG4=P3T4
+            phase3.save()
+
+        return HttpResponseRedirect('/home')
+    
+    else:
+        print p
+        TG={}
+        phase1=TotalG.objects.filter(project=p,phase=1)
+        phase2=TotalG.objects.filter(project=p,phase=2)
+        phase3=TotalG.objects.filter(project=p,phase=3)
+
+        if len(phase1)==0:
+            TG['P1T1']=''
+            TG['P1T2']=''
+            TG['P1T3']=''
+            TG['P1T4']=''
+        else:
+            phase1=phase1[0]
+            TG['P1T1']=phase1.TG1
+            TG['P1T2']=phase1.TG2
+            TG['P1T3']=phase1.TG3
+            TG['P1T4']=phase1.TG4
+
+        if len(phase2)==0:
+            TG['P2T1']=''
+            TG['P2T2']=''
+            TG['P2T3']=''
+            TG['P2T4']=''
+        else:
+            phase2=phase2[0]
+            TG['P2T1']=phase2.TG1
+            TG['P2T2']=phase2.TG2
+            TG['P2T3']=phase2.TG3
+            TG['P2T4']=phase2.TG4
+
+        if len(phase3)==0:
+            TG['P3T1']=''
+            TG['P3T2']=''
+            TG['P3T3']=''
+            TG['P3T4']=''
+
+        else:
+            phase3=phase3[0]
+            TG['P3T1']=phase3.TG1
+            TG['P3T2']=phase3.TG2
+            TG['P3T3']=phase3.TG3
+            TG['P3T4']=phase3.TG4
+
+        #return HttpResponse('sjksjkd')
+        print TG
+        return render_to_response("efforts.html", {"project":p,'TG':TG
+            }, context_instance=RequestContext(request))
+        

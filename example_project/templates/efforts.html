@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block body %}
+
+<h1>{% trans 'Add/edit effort' %}</h1>
+
+<div class="audiotracks-download">
+<form method="post" action="{% url 'add_edit_effort' project.id %}" >
+<table border="1" >
+<tr>
+<th>#</th>
+<th>TG1</th>
+<th>TG2</th>
+<th>TG3</th>
+<th>TG4</th>
+
+<tr >
+    <td >Phase1</td>
+    <td ><input type="text" id="P1T1" name="P1T1" style="width:100px" onkeypress="return isNumber(event)" value="{{ TG.P1T1 }}"></td>
+    <td ><input type="text" id="P1T1" name="P1T2" style="width:100px" onkeypress="return isNumber(event)" value="{{ TG.P1T2 }}"> </td>
+    <td ><input type="text" id="P1T1" name="P1T3" style="width:100px" onkeypress="return isNumber(event)" value="{{ TG.P1T3 }}"> </td>
+    <td ><input type="text" id="P1T1" name="P1T4" style="width:100px" onkeypress="return isNumber(event)" value="{{ TG.P1T4 }}"> </td>
+</tr>
+
+<tr>
+    <td >Phase2</td>
+   <td ><input type="text" id="P2T1" name="P2T1" style="width:100px" value="{{ TG.P2T1 }}"> </td>
+   <td ><input type="text" id="P2T2" name="P2T2" style="width:100px" value="{{ TG.P2T2 }}"> </td>
+   <td ><input type="text" id="P2T3" name="P2T3" style="width:100px" value="{{ TG.P2T3 }}"> </td>
+   <td ><input type="text" id="P2T4" name="P2T4" style="width:100px" value="{{ TG.P2T4 }}"> </td>
+</tr>
+<tr>
+    <td >Phase3</td>
+    <td ><input type="text" id="P3T1" name="P3T1" style="width:100px" value="{{ TG.P3T1 }}"></td>
+    <td ><input type="text" id="P3T2" name="P3T2" style="width:100px" value="{{ TG.P3T2 }}"> </td>
+    <td ><input type="text" id="P3T3" name="P3T3" style="width:100px" value="{{ TG.P3T3 }}"> </td>
+    <td ><input type="text" id="P3T4" name="P3T4" style="width:100px" value="{{ TG.P3T4 }}"></td>
+</tr>
+ 
+</table>
+ <input type="submit" style="
+    margin-top: 20px;
+    width: 100px;
+    margin-left: 167px;
+" value="Submit"/>
+ </form>
+</div>
+
+{% endblock %}

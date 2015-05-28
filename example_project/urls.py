@@ -11,10 +11,10 @@ urlpatterns = patterns('',
     url(r'^home$', 'main.views.home', name="project_data"),
     url(r'^upload$', 'main.views.upload', name="upload"),
     url(r'^project$', 'main.views.create_project', name="project"),
-    url(r'^apiUpload$', 'main.views.apiUpload', name="apiUpload"),
+    url(r'^apiUpload/(?P<user_data_id>\d+)$', 'main.views.apiUpload', name="apiUpload"),
     url(r'^login$', 'django.contrib.auth.views.login', name="login"),
     url(r'^logout$', 'django.contrib.auth.views.logout', name="logout"),
-
+     url(r'^add_edit_effort/(?P<project_id>\d+)$', 'main.views.add_edit_effort', name='add_edit_effort'),
     url(r'^project/(?P<project_id>\d+)$', 'main.views.project_details', name='project_details'),
     (r'^admin/', include(admin.site.urls)),
 )

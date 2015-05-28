@@ -11,6 +11,14 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('username', 'password')
 
+
+class UploadFileForm(forms.ModelForm):
+    class Meta:
+        model = UserData
+        fields = ('excelsheet',)
+
+   
+
 class UserDataForm(forms.ModelForm):
     Project_name = forms.ModelChoiceField(queryset=None,required=True,to_field_name="projectName")
     class Meta:

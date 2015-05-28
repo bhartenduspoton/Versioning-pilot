@@ -83,6 +83,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+     'simple_history.middleware.HistoryRequestMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -105,6 +106,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'main',
+    'simple_history',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (

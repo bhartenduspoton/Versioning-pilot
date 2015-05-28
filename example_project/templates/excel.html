@@ -3,6 +3,13 @@
 {% block body %}
 
 <h1>{% trans 'Latest Excel sheet uploads' %}</h1>
+<div class="audiotracks-download">
+    <a class="btn btn-large btn-success" href="{% url 'add_edit_effort' project.id %}">
+      {% blocktrans    %}
+            Add/Edit Effort
+      {% endblocktrans %}
+    </a>
+</div>
 <ul class="audiotracks-list">
 {% for userdata in userdatas %}
     {% include "list_excels.html" %}
